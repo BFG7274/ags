@@ -1,16 +1,15 @@
-
-
 import requests
+from config import conf
 
 
-def tmdbid_send_request(conf, tmdbid):
+def tmdbid_send_request(tmdbid):
     # Request
 
     try:
         response = requests.get(
             url=f"https://api.themoviedb.org/3/tv/{tmdbid}",
             params={
-                "api_key": conf['tmdb_key'],
+                "api_key": conf['tmdb']['api_key'],
                 "language": "en-US",
             },
         )
@@ -22,15 +21,3 @@ def tmdbid_send_request(conf, tmdbid):
         return name, year, season
     except requests.exceptions.RequestException:
         print('tmdbid HTTP Request failed')
-
-
-def test():
-    conf = {
-        'tmdb_key': ''
-    }
-    tmdbid = '67075'
-    tmdbid_send_request(conf, tmdbid)
-
-
-if __name__ == '__main__':
-    test()

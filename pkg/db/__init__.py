@@ -1,17 +1,17 @@
 import sqlite3
 import time
-
+from config import conf
 from pkg.tmdbQuery import tmdbid_send_request
 
 
 class dbInfo:
-    def init(self, conn, cs, conf):
-        self.conn = conn
-        self.cs = cs
-        self.conf = conf
+    def __init__(self):
+        self.path = conf['db']
+        self.conn = sqlite3.connect(self.path)
+        self.cs = self.conn.cursor()
 
     def nc_get_tmdbid(self, r, tmdbid):
-        data = tmdbid_send_request(self.conf, tmdbid)
+        data = tmdbid_send_request(tmdbid)
         r['tmdbid'] = tmdbid
         r['name'] = data[0]
         r['year'] = data[1]
@@ -61,17 +61,4 @@ class dbInfo:
         self.conn.commit()
 
 
-def init(conf):
-    conn = sqlite3.connect('ags.db')
-    cs = conn.cursor()
-    db = dbInfo()
-    db.init(conn, cs, conf)
-    return db
-
-
-def test():
-    pass
-
-
-if __name__ == '__main__':
-    init()
+db = dbInfo()

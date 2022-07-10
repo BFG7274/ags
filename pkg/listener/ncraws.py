@@ -1,9 +1,10 @@
-import imp
 import logging
 import time
 import re
 import json
 from telethon import events
+from config import conf
+from db import db
 
 
 def get_level(msg):
@@ -16,7 +17,7 @@ def get_level(msg):
 
 def get_tmdbid(msg):
     tmdbid_match = re.findall(
-        r'https:\/\/www\.themoviedb\.org\/tv\/(\d*)', msg, re.I)
+        r'https:\/\/www\.themoviedb\.org\/tv\/(\d*)(\-(.*))?', msg, re.I)
     print(len(tmdbid_match))
     return tmdbid_match[0]
 
@@ -28,8 +29,8 @@ def get_ep(msg):
     return ep_match
 
 
-def nc_raws_listen(conf, client, channel):
-    @client.on(events.NewMessage(chats=channel))
+def nc_raws_listen(client, channel):
+    @client.on(events.NewMessage(chats=conf['channel']['nc_raws']))
     async def newMessageListener(event):
         newMessage = event.message.message
         if 'magnet:?xt=urn:btih:' in newMessage:
@@ -40,10 +41,10 @@ def nc_raws_listen(conf, client, channel):
             ep = get_ep(newMessage)
             level = get_level(newMessage)
             if tmdbid != 0 & ep > 0:
-                info = conf.db.nc_get(tmdbid)
+                info = db.nc_get(tmdbid)
                 if level > info['level']:
                     info['level'] = level
-                    conf.db.nc_level(tmdbid, level)
+                    db.nc_level(tmdbid, level)
                 if info['level'] == 0:
                     print("level is 0")
                 elif info['level'] == -1:

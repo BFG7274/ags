@@ -1,4 +1,5 @@
 import requests
+from config import conf
 
 
 def default_send_request(tags, title, text):
@@ -6,7 +7,7 @@ def default_send_request(tags, title, text):
 
     try:
         response = requests.get(
-            url="",
+            url=conf['zwarn']['url'],
             params={
                 "tag": tags,
                 "title": title,
@@ -14,7 +15,7 @@ def default_send_request(tags, title, text):
                 "mode": "html",
             },
         )
-        if response.status_code/100 == 2:
+        if response.status_code/100 != 2:
             pass
 
     except requests.exceptions.RequestException:

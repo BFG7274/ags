@@ -3,5 +3,10 @@ ags.db
 config.yaml
 pkg/ags.db
 
-# python venv
+# python 
 .venv
+*/__pycache__
+*/*/__pycache__
+
+# telegram session
+anon.session
