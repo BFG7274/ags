@@ -1,22 +1,24 @@
+import logging
+import sys
 import requests
-from config import conf
+from pkg.config import conf
 
 
-def default_send_request(tags, title, text):
-    # send
-
+def default_send_request(tag, title, text):
+    tags = ['ags']+tag
     try:
         response = requests.get(
             url=conf['zwarn']['url'],
             params={
-                "tag": tags,
+                "tag": ','.join(tags),
                 "title": title,
                 "text": text,
                 "mode": "html",
             },
         )
-        if response.status_code/100 != 2:
-            pass
-
+        if response.status_code > 299:
+            logging.ERROR("Z-Warn does not work properly!")
+            sys.exit(1)
     except requests.exceptions.RequestException:
-        print(' Notify HTTP Request failed')
+        logging.ERROR(' Z-Warn HTTP Request failed')
+        sys.exit(1)

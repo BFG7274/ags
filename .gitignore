@@ -9,4 +9,7 @@ pkg/ags.db
 */*/__pycache__
 
 # telegram session
-anon.session
+anon*
+
+# log
+ags.log

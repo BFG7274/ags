@@ -1,10 +1,11 @@
+import logging
+import sys
 import requests
 from config import conf
 
 
 def tmdbid_send_request(tmdbid):
     # Request
-
     try:
         response = requests.get(
             url=f"https://api.themoviedb.org/3/tv/{tmdbid}",
@@ -13,6 +14,9 @@ def tmdbid_send_request(tmdbid):
                 "language": "en-US",
             },
         )
+        if response.status_code > 299:
+            logging.ERROR("TMDB does not work properly!")
+            sys.exit(1)
         data = response.json()
         name = data['name']
         seasons = data['seasons']
@@ -20,4 +24,5 @@ def tmdbid_send_request(tmdbid):
         year = data['first_air_date'][:4]
         return name, year, season
     except requests.exceptions.RequestException:
-        print('tmdbid HTTP Request failed')
+        logging.ERROR('TMDB HTTP Request failed')
+        sys.exit(1)
