@@ -1,0 +1,7 @@
+# config files
+ags.db
+config.yaml
+pkg/ags.db
+
+# python venv
+.venv
