@@ -2,9 +2,10 @@ import logging
 import sys
 import requests
 from pkg.config import conf
+import aiohttp
 
 
-def default_send_request(tag, title, text):
+async def default_send_request(tag, title, text):
     tags = ['ags']+tag
     try:
         response = requests.get(
